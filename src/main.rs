@@ -27,16 +27,23 @@ fn delete_rustacean(_id: i32) -> status::NoContent {
     status::NoContent
 }
 
+#[catch(404)]
+fn not_found() -> Value {
+    json!("Not found!")
+}
+
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount(
-        "/",
-        routes![
-            get_rustaceans,
-            view_rustacean,
-            create_rustacean,
-            update_rustacean,
-            delete_rustacean
-        ],
-    )
+    rocket::build()
+        .mount(
+            "/",
+            routes![
+                get_rustaceans,
+                view_rustacean,
+                create_rustacean,
+                update_rustacean,
+                delete_rustacean
+            ],
+        )
+        .register("/", catchers![not_found])
 }
